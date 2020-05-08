@@ -1,5 +1,9 @@
 #include <iostream>
 #include <string>
+// i was trying to implement the replace method
+// using a private remove method
+// but in order for remove to work
+// i must implement leftup , rightup
 
 class lexicon{
   private:
