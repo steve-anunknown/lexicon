@@ -120,33 +120,33 @@ class lexicon{
   node * rec_find(node *t,const std::string &s){
     if (t!=nullptr){
       if (s==t->word) return t;
-      if (s>t->word) return rec_find(t->right, s);
-      if (s<t->word) return rec_find(t->left, s); 
+      else if (s>t->word) return rec_find(t->right, s);
+      else return rec_find(t->left, s); 
     }
     else return nullptr;
-  }// probably will not reach end of non void function
+  }
   
   int rec_depth(node *t,const std::string s, bool &flag)const {
     if (t==nullptr) {flag=false; return 0;}
-    if (s==t->word) {flag=true; return 1;} 
-    if (s>t->word) {
+    else if (s==t->word) {flag=true; return 1;} 
+    else if (s>t->word) {
        int result=rec_depth(t->right, s, flag);
        (flag==true)? ++result : result=0;
        return result;
        }
-    if (s<t->word) {
+    else  {
        int result=rec_depth (t->left, s, flag);
        (flag==true)? ++result : result=0;
        return result;
        }
-  } // probably will not reach end of non void function
+  }
   
   int rec_lookup(node *t, const std::string &s)const{
     if (t==nullptr) return 0;
-    if (s>t->word) return rec_lookup(t->right, s);
-    if (s<t->word) return rec_lookup(t->left, s);
-    if (s==t->word) return t->frequency;
-  } // probably will not reach end of non void function
+    else if (s>t->word) return rec_lookup(t->right, s);
+    else if (s<t->word) return rec_lookup(t->left, s);
+    else  return t->frequency;
+  }
   
   static bool insert(node *t, const std::string &s) {
     if (s < t->word) {
