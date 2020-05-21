@@ -11,7 +11,41 @@ class lexicon {
             node (const string &s,unsigned int f):word(s),freq(f),left(NULL),right(NULL){};  
     };  
   
-    node *root;  
+    node *root;
+
+    static void place_down_right(node *right_word,node *parent, node *runner){
+      while (runner!=NULL){
+        parent=runner;
+        runner=runner->right;
+      }
+      parent->right=right_word;
+    }
+
+    static void insert_word(node *parent, node *runner, const string &s,unsigned int freq){
+                        while (runner!=NULL){  
+                                parent=runner;  
+                                if (s>runner->word) runner=runner->right;  
+                                else runner=runner->left;  
+                        }  
+                        if (s>parent->word){  
+                                parent->right= new node (s,freq);  
+                               // if (parent->right==NULL) exit(3);  
+                        }  
+                        else {  
+                                parent->left= new node (s,freq);  
+                               // if (parent->right==NULL) exit(3);  
+                        }  
+
+    }
+
+    static void find_word_and_parent(node *parent, node *runner,const string &s){
+      while (runner!=NULL){
+        if (s>runner->word) {parent=runner; runner=runner->right;}
+        else if (s<runner->word) {parent=runner; runner=runner->left;}
+        else break;
+      }
+    }
+
     static void purge (node *t){  
             if (t==NULL) return ;  
             purge (t->left);  
@@ -76,11 +110,7 @@ class lexicon {
                 if (s1==s2) return ;  
                 node* parent_s1=root;//parent of runner  
                 node* runner_s1=root;//runner points to s1  
-                while (runner_s1!=NULL){  
-                        if (s1>runner_s1->word){parent_s1=runner_s1; runner_s1=runner_s1->right;}  
-                        else if (s1<runner_s1->word){parent_s1=runner_s1; runner_s1=runner_s1->left;}  
-                        else  break;  
-                }  
+                find_word_and_parent(parent_s1, runner_s1, s1);
                 node *parent_s2=root;//parent of runner  
                 node *runner_s2=root;//runner points to s2  
                 while (runner_s2!=NULL){  
@@ -95,11 +125,7 @@ class lexicon {
                                 root=runner_s1->left;  
                                 node *temppar=runner_s1->left;  
                                 node *temprun=runner_s1->left;  
-                                while (temprun!=NULL){  
-                                        temppar=temprun;  
-                                        temprun=temprun->right;  
-                                }  
-                                temppar->right=runner_s1->right;  
+                                place_down_right(runner_s1->right, temppar, temprun); 
                         }  
                         else root=runner_s1->right;  
                 }  
@@ -108,11 +134,7 @@ class lexicon {
                                 parent_s1->left=runner_s1->left;  
                                 node *temppar=runner_s1->left;  
                                 node *temprun=runner_s1->left;  
-                                while (temprun!=NULL){  
-                                        temppar=temprun;  
-                                        temprun=temprun->right;  
-                                }  
-                                temppar->right=runner_s1->right;  
+                                place_down_right(runner_s1->right, temppar, temprun); 
                         }  
                         else parent_s1->left=runner_s1->right;  
                 }  
@@ -121,11 +143,7 @@ class lexicon {
                                 parent_s1->right=runner_s1->left;  
                                 node *temppar=runner_s1->left;  
                                 node *temprun=runner_s1->left;  
-                                while (temprun!=NULL){  
-                                        temppar=temprun;  
-                                        temprun=temprun->right;  
-                                }  
-                                temppar->right=runner_s1->right;  
+                                place_down_right(runner_s1->right, temppar, temprun);  
                         }  
                         else parent_s1->right=runner_s1->right;  
                 }  
@@ -134,19 +152,7 @@ class lexicon {
                         if (root==NULL) {root= new node (s2,freq1);/* if (root==NULL) exit(3);*/}  
                         node *temppar=root;  
                         node *temprun=root;  
-                        while (temprun!=NULL){  
-                                temppar=temprun;  
-                                if (s2>temprun->word) temprun=temprun->right;  
-                                else temprun=temprun->left;  
-                        }  
-                        if (s2>temppar->word){  
-                                temppar->right= new node (s2,freq1);  
-                               // if (temppar->right==NULL) exit(3);  
-                        }  
-                        else {  
-                                temppar->left= new node (s2,freq1);  
-                               // if (temppar->right==NULL) exit(3);  
-                        }  
+                        insert_word(temppar, temprun, s2, freq1);  
                 }  
                 else  runner_s2->freq+=freq1;  
         }  
