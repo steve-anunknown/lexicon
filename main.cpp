@@ -22,19 +22,19 @@ class lexicon {
     }
 
     static void insert_word(node *parent, node *runner, const string &s,unsigned int freq){
-                        while (runner!=NULL){  
-                                parent=runner;  
-                                if (s>runner->word) runner=runner->right;  
-                                else runner=runner->left;  
-                        }  
-                        if (s>parent->word){  
-                                parent->right= new node (s,freq);  
-                               // if (parent->right==NULL) exit(3);  
-                        }  
-                        else {  
-                                parent->left= new node (s,freq);  
-                               // if (parent->right==NULL) exit(3);  
-                        }  
+            while (runner!=NULL){  
+                    parent=runner;  
+                    if (s>runner->word) runner=runner->right;  
+                    else runner=runner->left;  
+            }  
+            if (s>parent->word){  
+                    parent->right= new node (s,freq);  
+                   // if (parent->right==NULL) exit(3);  
+            }  
+            else {  
+                  parent->left= new node (s,freq);  
+                  // if (parent->left==NULL) exit(3);  
+            }  
 
     }
 
@@ -110,14 +110,10 @@ class lexicon {
                 if (s1==s2) return ;  
                 node* parent_s1=root;//parent of runner  
                 node* runner_s1=root;//runner points to s1  
-                find_word_and_parent(parent_s1, runner_s1, s1);
+                find_word_and_parent(parent_s1, runner_s1, s1);//this seems to work fine
                 node *parent_s2=root;//parent of runner  
                 node *runner_s2=root;//runner points to s2  
-                while (runner_s2!=NULL){  
-                        if (s2>runner_s2->word){parent_s2=runner_s2; runner_s2=runner_s2->right;}  
-                        else if (s2<runner_s2->word){parent_s2=runner_s2; runner_s2=runner_s2->left;}  
-                        else  break;  
-                }  
+                find_word_and_parent(parent_s2, runner_s2, s2); //for some reason this doesn't work  
                 if (runner_s1==NULL) return ;  
                 unsigned int freq1=runner_s1->freq;  
                 if (runner_s1==root){  
